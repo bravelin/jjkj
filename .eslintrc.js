@@ -18,6 +18,7 @@ module.exports = {
         'no-unused-vars': 'off',
         'no-else-return': 'off',
         'strict': 'off',
+        'space-before-function-paren': 0,
         'no-irregular-whitespace': [
             'error',
             {
