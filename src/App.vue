@@ -3,9 +3,9 @@
         <NavBar></NavBar>
         <div class="swiper-container">
             <div class="swiper-wrapper">
-                <div class="swiper-slide s1" data-hash="s1">s1</div>
-                <div class="swiper-slide s2" data-hash="s2">s2</div>
-                <div class="swiper-slide s3" data-hash="s3">s3</div>
+                <S1 class="swiper-slide" data-hash="1">s1</S1>
+                <div class="swiper-slide s2" data-hash="2">s2</div>
+                <div class="swiper-slide s3" data-hash="3">s3</div>
             </div>
         </div>
     </div>
@@ -14,11 +14,12 @@
 <script>
     import Swiper from 'swiper'
     import NavBar from '@/components/NavBar'
+    import S1 from '@/views/s1/Main'
 
     export default {
         name: 'app',
         components: {
-            NavBar
+            NavBar, S1
         },
         data() {
             return {
@@ -46,9 +47,6 @@
 </script>
 
 <style lang="scss">
-    .s1 {
-      background: #00ccff;
-    }
     .s2 {
       background: #3399ff;
     }
