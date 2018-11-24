@@ -1,8 +1,8 @@
 <template>
     <div class="s1">
-        <Star></Star>
+        <!-- <Star></Star> -->
         <!-- <div class="earth"></div> -->
-        <Hexagon></Hexagon>
+        <Sphere></Sphere>
         <div class="text-zone">
             <Arrow></Arrow>
             <div class="text">
@@ -15,11 +15,11 @@
 </template>
 <script>
     import Arrow from './Arrow'
-    import Star from './Star'
-    import Hexagon from './Hexagon'
+    import Sphere from './Sphere'
+
     export default {
         components: {
-            Arrow, Star, Hexagon
+            Arrow, Sphere
         }
     }
 </script>

@@ -23,6 +23,7 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "swiper": "^4.4.2",
+    "three": "^0.98.0",
     "vue-template-compiler": "^2.5.17"
   }
 }
