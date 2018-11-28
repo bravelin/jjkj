@@ -3,6 +3,7 @@
 </template>
 <script>
     import * as THREE from 'three'
+    import TWEEN from '@/lib/tween'
     import Hexagon from './Hexagon'
     import CirclePath from './CirclePath'
 
@@ -11,15 +12,23 @@
     let renderer = null
     let sphere = null
     let container = null
-    let starts = null
+    let stars = null
     let light = null
     let CAMERA_CENTER_X = -20
-    let SPHERE_CENTER_X = -280 // 球的位置
-    let SPHERE_CENTER_Z = -100
-    let SCENE_BG_COLOR = 0x202276 // 场景的背景色
-    const hexagonShaps = [] // 六边形集
+    let SPHERE_CENTER_X = -400 // 球的位置
+    let SPHERE_CENTER_INIT_X = -780
+    let SPHERE_CENTER_Z = -400
+    let SPHERE_CENTER_INIT_Z = -2000
+    let SPHERE_SIZE = 200
+    let SCENE_BG_COLOR = 0x212282 // 场景的背景色
+    const hexagonShapes = [] // 六边形集
     const hexagonPaths = [] // 边集
+    let isSpreadHexagonShapes = false
 
+    // 定义tweens
+    let sphereTween = null
+    let lightTween = null
+    console.log(TWEEN.Easing)
     export default {
         data () {
             return {
@@ -72,13 +81,13 @@
                 let opacity = 1
                 let rowShapes = null
                 for (let j = 0; j < 9; j++) {
-                    startX = (j % 2 === 0 ? 145 : 99)
-                    opacity = 1 - Math.abs(4 - j) * 0.2
+                    startX = (j % 2 === 0 ? 40 : -5)
+                    opacity = 1 - Math.abs(4 - j) * 0.22
                     rowShapes = []
-                    hexagonShaps.push(rowShapes)
+                    hexagonShapes.push(rowShapes)
                     for (let i = 0; i < 4; i++) {
-                        hex = new Hexagon(SPHERE_CENTER_X - startX + i * 100, -200 + j * 50, opacity)
-                        hex.draw(scene)
+                        hex = new Hexagon(SPHERE_CENTER_X - startX + i * 110, -200 + j * 50, (i === 0 || i === 3 ? 0.4 : 1) * opacity)
+                        hex.draw(scene, SPHERE_CENTER_X + 155, 0)
                         rowShapes.push(hex)
                     }
                 }
@@ -87,13 +96,19 @@
                 // hexagonPaths 每条边是点的集合
                 const paths = []
                 paths.push([[0, 0, 2], [0, 0, 3], [0, 0, 4], [0, 0, 5], [0, 0, 0], [0, 1, 3], [0, 1, 2], [0, 1, 1], [0, 1, 0], [0, 1, 5]])
-                paths.push([[1, 1, 3], [1, 1, 2], [1, 1, 1], [1, 1, 0], [1, 1, 5], [0, 2, 4], [0, 2, 5], [0, 2, 0], [0, 2, 1], [1, 2, 3], [1, 2, 2], [1, 2, 1], [1, 2, 0], [1, 2, 5], [0, 3, 4], [0, 3, 5], [0, 3, 0], [0, 3, 1], [1, 3, 3], [1, 3, 2], [1, 3, 1], [1, 3, 0], [1, 3, 5]])
+                paths.push([[1, 1, 3], [1, 1, 2], [1, 1, 1], [1, 1, 0], [1, 1, 5], [0, 2, 4], [0, 2, 5], [0, 2, 0], [0, 2, 1], [1, 2, 4], [1, 2, 3], [1, 2, 2], [1, 2, 1], [1, 2, 0], [1, 2, 5], [0, 3, 4], [0, 3, 5], [0, 3, 0], [0, 3, 1], [1, 3, 4], [1, 3, 3], [1, 3, 2], [1, 3, 1], [1, 3, 0], [1, 3, 5]])
                 paths.push([[2, 0, 0], [2, 0, 1], [2, 0, 2], [2, 0, 3], [2, 0, 4], [1, 0, 1], [1, 0, 0], [1, 0, 5], [1, 0, 4], [1, 0, 3]])
-                paths.push([[4, 1, 4], [4, 1, 3], [4, 1, 2], [4, 1, 1], [3, 1, 2], [3, 1, 1], [3, 1, 0], [3, 1, 5], [2, 1, 2], [2, 1, 3], [2, 1, 4], [2, 1, 5]])
-                paths.push([[4, 0, 3], [4, 0, 2], [4, 0, 1], [4, 0, 0], [4, 0, 5], [3, 0, 3], [3, 0, 4], [3, 0, 5], [3, 0, 0], [5, 0, 3], [5, 0, 2], [5, 0, 1], [5, 0, 0]])
-                paths.push([[6, 0, 2], [6, 0, 3], [6, 0, 4], [6, 0, 5], [6, 0, 0], [7, 0, 4], [7, 0, 5], [7, 0, 0], [7, 0, 1], [7, 0, 2], [8, 0, 1], [8, 0, 2], [8, 0, 3], [8, 0, 4]])
+                paths.push([[4, 1, 4], [4, 1, 3], [4, 1, 2], [4, 1, 1], [4, 1, 0], [4, 1, 5], [3, 1, 1], [3, 1, 0], [3, 1, 5], [2, 1, 2], [2, 1, 3], [2, 1, 4], [2, 1, 5]])
+                paths.push([[4, 0, 3], [4, 0, 2], [4, 0, 1], [4, 0, 0], [4, 0, 5], [3, 0, 2], [3, 0, 3], [3, 0, 4], [3, 0, 5], [3, 0, 0], [5, 0, 3], [5, 0, 2], [5, 0, 1], [5, 0, 0]])
+                paths.push([[6, 0, 2], [6, 0, 3], [6, 0, 4], [6, 0, 5], [6, 0, 0], [6, 0, 1], [7, 0, 5], [7, 0, 0], [7, 0, 1], [7, 0, 2], [8, 0, 1], [8, 0, 2], [8, 0, 3], [8, 0, 4]])
+                paths.push([[2, 2, 4], [2, 2, 3], [2, 2, 2], [2, 2, 1], [2, 2, 0], [2, 3, 3], [2, 3, 4], [2, 3, 5], [2, 3, 0], [2, 3, 1], [2, 3, 2], [3, 2, 4], [3, 2, 3], [3, 2, 2], [3, 2, 1], [3, 2, 0]])
+                paths.push([[5, 3, 1], [5, 3, 0], [5, 3, 5], [5, 3, 4], [5, 3, 3], [5, 3, 2], [6, 3, 5], [6, 3, 0], [6, 3, 1], [6, 3, 2], [5, 2, 1], [5, 2, 2], [5, 2, 3], [5, 2, 4], [5, 2, 5]])
+                paths.push([[7, 3, 1], [7, 3, 0], [7, 3, 5], [7, 3, 4], [7, 3, 3], [7, 3, 2], [8, 3, 5], [8, 3, 0], [8, 3, 1], [8, 3, 2], [8, 3, 3], [8, 2, 0], [8, 2, 5], [8, 2, 4], [8, 2, 3], [8, 2, 2]])
+                paths.push([[8, 1, 4], [8, 1, 3], [8, 1, 2], [8, 1, 1], [7, 1, 2], [7, 1, 3], [7, 1, 4], [7, 1, 5], [7, 1, 0], [7, 2, 3], [7, 2, 2], [7, 2, 1], [7, 2, 0], [7, 2, 5]])
+                paths.push([[3, 3, 4], [3, 3, 5], [3, 3, 0], [3, 3, 1], [4, 3, 5], [4, 3, 0], [4, 3, 1], [4, 3, 2], [4, 3, 3]])
+                paths.push([[6, 1, 3], [6, 1, 2], [6, 1, 1], [6, 1, 0], [6, 1, 5], [5, 1, 2], [5, 1, 3], [5, 1, 4], [5, 1, 5], [5, 1, 0], [5, 1, 1], [6, 2, 2], [6, 2, 1], [6, 2, 0], [6, 2, 5], [4, 2, 3], [4, 2, 4], [4, 2, 5], [4, 2, 0], [4, 3, 3]])
                 paths.forEach(path => {
-                    hexagonPaths.push(new CirclePath(scene, hexagonShaps, path))
+                    hexagonPaths.push(new CirclePath(scene, hexagonShapes, path))
                 })
             },
             drawLight () {
@@ -115,12 +130,34 @@
                 const material = new THREE.SpriteMaterial({
                     map: new THREE.CanvasTexture(canvas), blending: THREE.AdditiveBlending
                 })
-                const mesh = new THREE.Sprite(material)
-                mesh.scale.x = mesh.scale.y = size * 1.5
-                mesh.position.z = SPHERE_CENTER_Z
-                mesh.position.x = SPHERE_CENTER_X
-                mesh.position.y = 0
-                scene.add(mesh)
+                light = new THREE.Sprite(material)
+                light.scale.x = light.scale.y = light.scale.z = 0.01
+                light.position.z = SPHERE_CENTER_Z
+                light.position.x = SPHERE_CENTER_X
+                light.position.y = 0
+                scene.add(light)
+                let tween = null
+                lightTween = new TWEEN.Tween(light.scale).to({ x: 450, y: 450, z: 450 }, 1500).easing(TWEEN.Easing.Linear.None).onComplete(() => {
+                    hexagonShapes.forEach(rowArr => {
+                        rowArr.forEach(h => h.shapes.forEach(s => {
+                            new TWEEN.Tween(s.mesh.scale).to({ x: 45, y: 45 }, 300).easing(TWEEN.Easing.Linear.None).start().onComplete(() => {
+                                if (!isSpreadHexagonShapes) {
+                                    isSpreadHexagonShapes = true
+                                    that.spreadHexagonShapes()
+                                }
+                            })
+                        }))
+                    })
+                })
+            },
+            spreadHexagonShapes () {
+                hexagonShapes.forEach(rowArr => {
+                    rowArr.forEach(h => h.shapes.forEach(s => {
+                        new TWEEN.Tween(s.mesh.position).to({ x: s.x, y: s.y }, 1200).easing(TWEEN.Easing.Cubic.InOut).start().onComplete(() => {
+                            console.log('complete.....')
+                        })
+                    }))
+                })
             },
             drawStar () { // 星星
                 const that = this
@@ -148,43 +185,43 @@
                 const geometry = new THREE.CircleGeometry(starSize, 50)
                 const starNum = 500
                 let mesh = null
-                starts = new THREE.Object3D()
+                stars = new THREE.Object3D()
                 for (let i = 0; i < starNum; i++) {
                     mesh = new THREE.Sprite(material)
                     mesh.scale.x = mesh.scale.y = starSize * 1.5
                     mesh.position.z = -400 + Math.random() * 700
                     mesh.position.x = -350 + Math.random() * 700
                     mesh.position.y = -300 + Math.random() * 600
-                    starts.add(mesh)
+                    stars.add(mesh)
                 }
-                scene.add(starts)
-                starts.position.set(-180, 0, 0)
+                scene.add(stars)
+                stars.position.set(-180, 0, 0)
             },
             drawSphere () { // 球
-                const geometry = new THREE.IcosahedronGeometry(120, 2)
+                const geometry = new THREE.IcosahedronGeometry(SPHERE_SIZE, 3)
                 const sphereBuffer = new THREE.BufferGeometry().fromGeometry(geometry)
-                const material = new THREE.MeshLambertMaterial({ color: 0x192376, transparent: true, opacity: 0.2 })
+                const material = new THREE.MeshLambertMaterial({ color: 0x192376, transparent: true, opacity: 0 })
                 sphere = new THREE.Mesh(sphereBuffer, material)
                 scene.add(sphere)
 
                 const edgesGeometry = new THREE.EdgesGeometry(sphere.geometry)
                 const edgesMaterial = new THREE.LineDashedMaterial({
-                    color: 0xe0e0e0,
+                    color: 0x4C51A2,
                     dashSize: 0.5,
                     gapSize: 0.5
                 })
                 const edges = new THREE.LineSegments(edgesGeometry, edgesMaterial)
                 edges.computeLineDistances()
                 sphere.add(edges)
-                sphere.translateX(SPHERE_CENTER_X)
-                sphere.translateZ(SPHERE_CENTER_Z)
-                sphere.castShadow = true
+                sphere.translateX(SPHERE_CENTER_INIT_X)
+                sphere.translateZ(SPHERE_CENTER_INIT_Z)
+                sphereTween = new TWEEN.Tween(sphere.position).to({ x: SPHERE_CENTER_X, z: SPHERE_CENTER_Z }, 1200).easing(TWEEN.Easing.Linear.None).start().chain(lightTween)
             },
             animate () {
                 const that = this
-                const time = Date.now() * 0.0005
                 sphere.rotation.y += 0.002
-                starts.rotation.y += 0.0001
+                stars.rotation.y += 0.0003
+                TWEEN.update()
                 renderer.render(scene, camera)
                 that.requestId = requestAnimationFrame(that.animate)
             }
