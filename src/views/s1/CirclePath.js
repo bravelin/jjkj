@@ -3,7 +3,6 @@ import CirclePoint from './CirclePoint'
 import * as THREE from 'three'
 const RADIUS = 29
 const PI = Math.PI
-const SEGMENT = 10
 export default class CirclePath {
     constructor (scene, hexagons, pointArr, isNeedFlow = false) {
         this.scene = scene
@@ -23,8 +22,8 @@ export default class CirclePath {
         this.dX = 0
         this.dY = 0
         this.currSegment = 0
-
         this.drawPoints = []
+        this.segment = 10
         // this.draw()
     }
     computePointPosition () { // 计算点集中各个点的x，y，z坐标
@@ -48,7 +47,9 @@ export default class CirclePath {
     update () { // 更新绘制
         const that = this
         if (that.nextPointIndex < that.points.length) {
-            that.group.remove(...that.group.children) // 移除所有对象，重新绘制
+            if (that.group.children.length > 0) { // 移除所有对象，重新绘制
+                that.group.remove(...that.group.children)
+            }
             // 更新drawPoints
             that.drawPoints = []
             for (let i = 0; i <= that.currPointIndex; i++) {
@@ -58,22 +59,28 @@ export default class CirclePath {
                 const currPoint = that.points[that.currPointIndex]
                 const nextPoint = that.points[that.nextPointIndex]
                 const middlePoint = { opacity: currPoint.opacity, z: currPoint.z }
-                this.dx = (nextPoint.x - currPoint.x) / SEGMENT
-                this.dy = (nextPoint.y - currPoint.y) / SEGMENT
+                if (this.currSegment === 1) {
+                    let dy = nextPoint.y - currPoint.y
+                    let dx = nextPoint.x - currPoint.x
+                    const distance = Math.sqrt(dx * dx + dy * dy)
+                    this.segment = Math.ceil(distance / 2)
+                    this.dx = (nextPoint.x - currPoint.x) / this.segment
+                    this.dy = (nextPoint.y - currPoint.y) / this.segment
+                }
                 middlePoint.x = currPoint.x + this.dx * this.currSegment
                 middlePoint.y = currPoint.y + this.dy * this.currSegment
                 that.drawPoints.push(middlePoint)
+                that.draw() // 绘制
                 that.currSegment++
-                if (that.currSegment > SEGMENT) {
+                if (that.currSegment > this.segment) {
                     that.currPointIndex++
                     that.currSegment = 0
                 }
             } else {
+                that.draw() // 绘制
                 that.nextPointIndex++
                 this.currSegment = 1
             }
-            // 绘制
-            that.draw()
         }
     }
     draw () {
@@ -81,7 +88,7 @@ export default class CirclePath {
         const geometry = new THREE.CircleGeometry(3, 32) // 0x0817cc
         const material = new THREE.MeshBasicMaterial({ color: 0x262DD1, transparent: true, opacity: 1 })
         let circle = null
-        const lineMaterial = new THREE.LineBasicMaterial({ color: 0x262DD1, transparent: true, opacity: 1 })
+        const lineMaterial = new THREE.LineBasicMaterial({ linewidth: 2, color: 0xffffff, transparent: true, opacity: 1 })
         const lineGeometry = new THREE.BufferGeometry()
         const linePositions = []
         that.drawPoints.forEach((point, index) => {

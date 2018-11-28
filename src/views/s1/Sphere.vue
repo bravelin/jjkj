@@ -24,11 +24,11 @@
     const hexagonShapes = [] // 六边形集
     const hexagonPaths = [] // 边集
     let isSpreadHexagonShapes = false
+    let isUpdateHexagonPath = false
 
     // 定义tweens
     let sphereTween = null
     let lightTween = null
-    console.log(TWEEN.Easing)
     export default {
         data () {
             return {
@@ -96,7 +96,7 @@
                 // hexagonPaths 每条边是点的集合
                 const paths = []
                 paths.push([[0, 0, 2], [0, 0, 3], [0, 0, 4], [0, 0, 5], [0, 0, 0], [0, 1, 3], [0, 1, 2], [0, 1, 1], [0, 1, 0], [0, 1, 5]])
-                paths.push([[1, 1, 3], [1, 1, 2], [1, 1, 1], [1, 1, 0], [1, 1, 5], [0, 2, 4], [0, 2, 5], [0, 2, 0], [0, 2, 1], [1, 2, 4], [1, 2, 3], [1, 2, 2], [1, 2, 1], [1, 2, 0], [1, 2, 5], [0, 3, 4], [0, 3, 5], [0, 3, 0], [0, 3, 1], [1, 3, 4], [1, 3, 3], [1, 3, 2], [1, 3, 1], [1, 3, 0], [1, 3, 5]])
+                paths.push([[1, 1, 3], [1, 1, 2], [1, 1, 1], [1, 1, 0], [1, 1, 5], [0, 2, 4], [0, 2, 5], [0, 2, 0], [0, 2, 1], [0, 2, 2], [1, 2, 2], [1, 2, 1], [1, 2, 0], [1, 2, 5], [0, 3, 4], [0, 3, 5], [0, 3, 0], [0, 3, 1], [0, 3, 2], [1, 3, 2], [1, 3, 1], [1, 3, 0], [1, 3, 5]])
                 paths.push([[2, 0, 0], [2, 0, 1], [2, 0, 2], [2, 0, 3], [2, 0, 4], [1, 0, 1], [1, 0, 0], [1, 0, 5], [1, 0, 4], [1, 0, 3]])
                 paths.push([[4, 1, 4], [4, 1, 3], [4, 1, 2], [4, 1, 1], [4, 1, 0], [4, 1, 5], [3, 1, 1], [3, 1, 0], [3, 1, 5], [2, 1, 2], [2, 1, 3], [2, 1, 4], [2, 1, 5]])
                 paths.push([[4, 0, 3], [4, 0, 2], [4, 0, 1], [4, 0, 0], [4, 0, 5], [3, 0, 2], [3, 0, 3], [3, 0, 4], [3, 0, 5], [3, 0, 0], [5, 0, 3], [5, 0, 2], [5, 0, 1], [5, 0, 0]])
@@ -107,6 +107,7 @@
                 paths.push([[8, 1, 4], [8, 1, 3], [8, 1, 2], [8, 1, 1], [7, 1, 2], [7, 1, 3], [7, 1, 4], [7, 1, 5], [7, 1, 0], [7, 2, 3], [7, 2, 2], [7, 2, 1], [7, 2, 0], [7, 2, 5]])
                 paths.push([[3, 3, 4], [3, 3, 5], [3, 3, 0], [3, 3, 1], [4, 3, 5], [4, 3, 0], [4, 3, 1], [4, 3, 2], [4, 3, 3]])
                 paths.push([[6, 1, 3], [6, 1, 2], [6, 1, 1], [6, 1, 0], [6, 1, 5], [5, 1, 2], [5, 1, 3], [5, 1, 4], [5, 1, 5], [5, 1, 0], [5, 1, 1], [6, 2, 2], [6, 2, 1], [6, 2, 0], [6, 2, 5], [4, 2, 3], [4, 2, 4], [4, 2, 5], [4, 2, 0], [4, 3, 3]])
+
                 paths.forEach(path => {
                     hexagonPaths.push(new CirclePath(scene, hexagonShapes, path))
                 })
@@ -151,10 +152,13 @@
                 })
             },
             spreadHexagonShapes () {
+                const that = this
                 hexagonShapes.forEach(rowArr => {
                     rowArr.forEach(h => h.shapes.forEach(s => {
                         new TWEEN.Tween(s.mesh.position).to({ x: s.x, y: s.y }, 1200).easing(TWEEN.Easing.Cubic.InOut).start().onComplete(() => {
-                            console.log('complete.....')
+                            if (!isUpdateHexagonPath) {
+                                isUpdateHexagonPath = true
+                            }
                         })
                     }))
                 })
@@ -222,6 +226,9 @@
                 sphere.rotation.y += 0.002
                 stars.rotation.y += 0.0003
                 TWEEN.update()
+                if (isUpdateHexagonPath) {
+                    hexagonPaths.forEach(path => path.update())
+                }
                 renderer.render(scene, camera)
                 that.requestId = requestAnimationFrame(that.animate)
             }

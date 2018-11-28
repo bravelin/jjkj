@@ -31,7 +31,7 @@ export default class Hexagon { // 层叠的三个六边形
             context.strokeStyle = 'rgb(11,22,157)'
             context.lineCap = 'round'
             context.lineJoin = 'round'
-            context.lineWidth = 2
+            context.lineWidth = 3
             context.moveTo(centerX + len * Math.cos(0), centerY + len * Math.sin(0))
             for (let j = 0; j <= 6; j++) {
                 context.lineTo(centerX + len * Math.cos(j * Math.PI / 3), centerY + len * Math.sin(j * Math.PI / 3))
