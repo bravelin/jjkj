@@ -84,3 +84,33 @@
         }
     }
 }
+
+@media screen and (max-width: 1279px) {
+    .nav-bar{
+        >div{
+            width: 95%;
+        }
+    }
+}
+
+@media screen and (max-width: 989px) {
+    .nav-bar{
+        .nav-list{
+            font-size: 20px;
+        }
+    }
+}
+@media screen and (max-width: 989px) {
+    .nav-bar{
+        .nav-list{
+            font-size: 16px;
+        }
+    }
+}
+@media screen and (max-width: 850px) {
+    .nav-bar{
+        .nav-list{
+            display: none;
+        }
+    }
+}

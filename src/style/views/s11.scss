@@ -1,12 +1,14 @@
 .s1{
     background: url('../../assets/image/01-bg.jpg') center center;
+    background-size: 100% 100%;
     position: relative;
     .text-zone{
         position: absolute;
         width: 900px;
         height: 440px;
-        bottom: 270px;
-        right: 90px;
+        top: 50%;
+        right: 3.6%;
+        margin-top: -220px;
         // border: 1px solid #f00;
         &:after{
             content: '';
@@ -63,6 +65,69 @@
                 margin-top: 20px;
                 font-size: 40px;
             }
+        }
+    }
+}
+@media screen and (max-width: 1600px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.8, 0.8);
+            right: 0;
+        }
+    }
+}
+@media screen and (max-width: 1500px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.8, 0.8);
+            right: -3%;
+        }
+    }
+}
+@media screen and (max-width: 1300px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.7, 0.7);
+            right: -8%;
+        }
+    }
+}
+@media screen and (max-width: 1000px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.6, 0.6);
+            right: -16%;
+        }
+    }
+}
+@media screen and (max-width: 700px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.5, 0.5);
+            right: -30%;
+        }
+    }
+}
+@media screen and (max-width: 500px) {
+    .s1{
+        .text-zone{
+            right: -40%;
+        }
+    }
+}
+@media screen and (max-width: 400px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.4, 0.4);
+            right: -65%;
+        }
+    }
+}
+@media screen and (max-width: 320px) {
+    .s1{
+        .text-zone{
+            transform: scale(0.36, 0.36);
+            right: -88%;
         }
     }
 }
