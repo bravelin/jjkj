@@ -12,7 +12,6 @@
 </template>
 
 <script>
-    import { swiperAnimateCache, swiperAnimate } from '@/lib/swiper.animate1.0.3.min'
     import NavBar from '@/components/NavBar'
     import S1 from '@/views/s11/Main'
     export default {
@@ -43,11 +42,11 @@
                             //         anis[i].classList.add('active')
                             //     }
                             // }
-                            // swiperAnimateCache(that.swiperInstance) // 隐藏动画元素
-                            // swiperAnimate(that.swiperInstance) // 初始化完成开始动画
+                            swiperAnimateCache(this) // 隐藏动画元素
+                            swiperAnimate(this) // 初始化完成开始动画
                         },
                         slideChangeTransitionEnd () {
-                            // swiperAnimate(that.swiperInstance) // 每个slide切换结束时也运行当前slide动画
+                            swiperAnimate(this) // 每个slide切换结束时也运行当前slide动画
                         }
                     }
                 })

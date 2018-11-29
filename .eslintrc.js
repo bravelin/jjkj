@@ -34,7 +34,9 @@ module.exports = {
         ]
     },
     globals: {
-        Swiper: true
+        Swiper: true,
+        swiperAnimateCache: true,
+        swiperAnimate: true
     },
     parserOptions: {
         parser: 'babel-eslint'
