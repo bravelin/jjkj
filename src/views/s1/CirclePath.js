@@ -63,7 +63,7 @@ export default class CirclePath {
                     let dy = nextPoint.y - currPoint.y
                     let dx = nextPoint.x - currPoint.x
                     const distance = Math.sqrt(dx * dx + dy * dy)
-                    this.segment = Math.ceil(distance / 2)
+                    this.segment = Math.ceil(distance / 1.1)
                     this.dx = (nextPoint.x - currPoint.x) / this.segment
                     this.dy = (nextPoint.y - currPoint.y) / this.segment
                 }
@@ -88,7 +88,7 @@ export default class CirclePath {
         const geometry = new THREE.CircleGeometry(3, 32) // 0x0817cc
         const material = new THREE.MeshBasicMaterial({ color: 0x262DD1, transparent: true, opacity: 1 })
         let circle = null
-        const lineMaterial = new THREE.LineBasicMaterial({ linewidth: 2, color: 0xffffff, transparent: true, opacity: 1 })
+        const lineMaterial = new THREE.LineBasicMaterial({ linewidth: 1, color: 0x262DD1, transparent: true, opacity: 1 })
         const lineGeometry = new THREE.BufferGeometry()
         const linePositions = []
         that.drawPoints.forEach((point, index) => {
