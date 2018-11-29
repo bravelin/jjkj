@@ -25,6 +25,8 @@
     const hexagonPaths = [] // 边集
     let isSpreadHexagonShapes = false
     let isUpdateHexagonPath = false
+    let circlePathCanvasCtx = null
+    let circlePathFinishedCount = 0
 
     // 定义tweens
     let sphereTween = null
@@ -68,6 +70,13 @@
                 renderer.shadowMap.enabled = true
                 renderer.shadowMap.type = THREE.PCFSoftShadowMap
                 container.appendChild(renderer.domElement)
+
+                const canvas = document.querySelector('#circle-paths')
+                canvas.width = that.width
+                canvas.height = that.height
+                canvas.style.cssText = `width:${that.width}px;${that.height}px`
+                circlePathCanvasCtx = canvas.getContext('2d')
+
                 that.drawStar() // 背景星星
                 that.drawLight() // 添加球中心的光晕
                 that.drawSphere() // 添加旋转的球
@@ -226,8 +235,15 @@
                 sphere.rotation.y += 0.002
                 stars.rotation.y += 0.0003
                 TWEEN.update()
-                if (isUpdateHexagonPath) {
-                    hexagonPaths.forEach(path => path.update())
+                if (isUpdateHexagonPath && circlePathFinishedCount < 8000 + hexagonPaths.length) {
+                    circlePathCanvasCtx.clearRect(0, 0, that.width, that.height)
+                    let path = null
+                    hexagonPaths.forEach(path => {
+                        path.update()
+                        if (path.finished) {
+                            circlePathFinishedCount++
+                        }
+                    })
                 }
                 renderer.render(scene, camera)
                 that.requestId = requestAnimationFrame(that.animate)

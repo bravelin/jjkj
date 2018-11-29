@@ -34,7 +34,7 @@ module.exports = {
         ]
     },
     globals: {
-
+        Swiper: true
     },
     parserOptions: {
         parser: 'babel-eslint'

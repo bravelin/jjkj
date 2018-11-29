@@ -1,10 +1,7 @@
 <template>
     <div class="s1">
-        <!-- <Star></Star> -->
-        <!-- <div class="earth"></div> -->
-        <Sphere></Sphere>
         <div class="text-zone">
-            <Arrow></Arrow>
+            <Arrow class="ani" swiper-animate-effect="fadeInUp" swiper-animate-duration="0.5s" swiper-animate-delay="0.3s"></Arrow>
             <div class="text">
                 <div>BLOCK CHACHAINPAYMENT</div>
                 <div>区块链</div>
@@ -15,11 +12,10 @@
 </template>
 <script>
     import Arrow from './Arrow'
-    import Sphere from './Sphere'
 
     export default {
         components: {
-            Arrow, Sphere
+            Arrow
         }
     }
 </script>
