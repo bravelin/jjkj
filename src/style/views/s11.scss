@@ -62,8 +62,24 @@
                 // }
             }
             &:nth-of-type(3){
+                position: relative;
                 margin-top: 20px;
                 font-size: 40px;
+                >div{
+                    position: absolute;
+                    top: 0;
+                    left: 50%;
+                    width: 320px;
+                    height: 100%;
+                    margin-left: -160px;
+                    background: rgb(21,22,79);
+                    transform-origin: 100% 50%;
+                    transition:all 0.9s ease-out;
+                    transition-delay: 1.5s;
+                    &.active{
+                        transform: scale(0, 1);
+                    }
+                }
             }
         }
     }

@@ -34,14 +34,14 @@
                     keyboard: true,
                     on: {
                         init () {
-                            // const slideName = `s${this.activeIndex + 1}`
-                            // const anisParent = document.querySelector(`.${slideName}`)
-                            // if (anisParent) {
-                            //     const anis = anisParent.querySelectorAll('.ani')
-                            //     for (let i = 0; i < anis.length; i++) {
-                            //         anis[i].classList.add('active')
-                            //     }
-                            // }
+                            const slideName = `s${this.activeIndex + 1}`
+                            const anisParent = document.querySelector(`.${slideName}`)
+                            if (anisParent) {
+                                const anis = anisParent.querySelectorAll('.self-ani')
+                                for (let i = 0; i < anis.length; i++) {
+                                    anis[i].classList.add('active')
+                                }
+                            }
                             swiperAnimateCache(this) // 隐藏动画元素
                             swiperAnimate(this) // 初始化完成开始动画
                         },

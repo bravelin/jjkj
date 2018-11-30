@@ -5,7 +5,10 @@
             <div class="text">
                 <div class="ani" swiper-animate-effect="fadeInLeft" swiper-animate-duration="1s" swiper-animate-delay="1.1s">BLOCK CHACHAINPAYMENT</div>
                 <div class="ani" swiper-animate-effect="fadeInDown" swiper-animate-duration="1.2s" swiper-animate-delay="0.3s">区块链</div>
-                <div class="ani" swiper-animate-effect="fadeInRight" swiper-animate-duration="1s" swiper-animate-delay="1.1s">安全 可靠 跨平台</div>
+                <div>
+                    安全 可靠 跨平台
+                    <div class="self-ani"></div>
+                </div>
             </div>
         </div>
     </div>
